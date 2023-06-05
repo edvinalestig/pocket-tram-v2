@@ -22,16 +22,15 @@ malformed_request(Req, State) ->
     end.
 
 to_json(Req, State) ->
-    % io:format("~nBEGIN!!!~n"),
-    Gid = "9021014003760000",
+    % Gid = "9021014003760000",
+    #{stop := Stop} = cowboy_req:match_qs([stop], Req),
+    Gid = util:get_gids([Stop]),
+
     Result = vasttrafik:departures(Gid),
-    % io:format("Results received~n"),
     {<<"results">>, Results} = lists:keyfind(<<"results">>, 1, Result),
-    % io:format("Encoding..~n~p~n", [jsx:is_json(Results)]),
     
 
-    
+
     Body = jsx:encode(Results),
-    % io:format("Encoded, sending...~n"),
     {Body, Req, State}.
     

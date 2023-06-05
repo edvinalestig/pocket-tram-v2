@@ -8,7 +8,6 @@ start(_Type, _Args) ->
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/", cowboy_static, {priv_file, pockettram2, "index.html"}},
-            {"/test", test, []},
             {"/stop/[...]", cowboy_static, {priv_file, pockettram2, "stop.html"}},
             {"/static/[...]", cowboy_static, {priv_dir, pockettram2, "static"}},
             {"/request", requests, []} % REST
