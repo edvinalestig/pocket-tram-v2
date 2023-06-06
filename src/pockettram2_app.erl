@@ -14,7 +14,7 @@ start(_Type, _Args) ->
         ]}
     ]),
     {ok, _} = cowboy:start_clear(my_http_listener,
-        [{port, 8080}],
+        [{ip, {0,0,0,0}}, {port, 8080}],
         #{env => #{dispatch => Dispatch}}
     ),
     pockettram2_sup:start_link().

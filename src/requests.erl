@@ -28,8 +28,10 @@ to_json(Req, State) ->
     Result = vasttrafik:departures(Gid),
     {<<"results">>, Results} = lists:keyfind(<<"results">>, 1, Result),
     
-    Cleaned = util:extract_info(Results),
+    Extracted = util:extract_info(Results),
+    Combined  = util:combine_departures(Extracted),
+    Sorted    = util:sort(Combined),
 
-    Body = jsx:encode(Cleaned),
+    Body = jsx:encode(Sorted),
     {Body, Req, State}.
     

@@ -5,11 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stop info - Pocket tram v2</title>
+    <link rel="stylesheet" href="/static/stop.css">
 </head>
 <body>
-    <h1><a href="/">Hem</a></h1>
-    <p>Hej!</p>
-    <button onclick="getDepartures();">Anropa!</button>
+    <a id="titlebar" href="/">
+        <img id="homeimg" src="https://upload.wikimedia.org/wikipedia/commons/3/30/Home_free_icon.svg" alt="Hem">
+        <h1 id="title">Startsida</h1>
+    </a>
+    <div id="main"></div>
+
+    <div id="btndiv">
+        <button id="updatebtn" onclick="getDepartures();">Uppdatera!</button>
+    </div>
 
     <script src="/static/stop.js"></script>
 </body>

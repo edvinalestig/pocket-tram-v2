@@ -21,7 +21,7 @@ departures(StopGid, _) -> % DirectionGid
     Url = restc:construct_url("https://ext-api.vasttrafik.se/pr/v4/", 
                               "stop-areas/" ++ StopGid ++ "/departures", [
                                 {<<"maxDeparturesPerLineAndDirection">>, <<"3">>},
-                                {<<"limit">>, <<"20">>}
+                                {<<"limit">>, <<"100">>}
                               ]),
     {{ok, _, _, Result}, _} = oauth2c:request(get, json, Url, [200], Client),
     Result.
