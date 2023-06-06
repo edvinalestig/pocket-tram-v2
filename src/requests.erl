@@ -10,11 +10,10 @@ init(Req, State) ->
 	{cowboy_rest, Req, State}.
 
 content_types_provided(Req, State) ->
-	{[
-        {<<"application/json">>, to_json}
-	], Req, State}.
+	{[{<<"application/json">>, to_json}], Req, State}.
 
 malformed_request(Req, State) ->
+    % url?stop= is necessary
     StopMap = catch cowboy_req:match_qs([stop], Req),
     case StopMap of
         {'EXIT', _} -> {true, Req, State};
@@ -29,8 +28,8 @@ to_json(Req, State) ->
     Result = vasttrafik:departures(Gid),
     {<<"results">>, Results} = lists:keyfind(<<"results">>, 1, Result),
     
+    Cleaned = util:extract_info(Results),
 
-
-    Body = jsx:encode(Results),
+    Body = jsx:encode(Cleaned),
     {Body, Req, State}.
     
