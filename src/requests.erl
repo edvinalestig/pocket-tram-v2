@@ -14,8 +14,7 @@ content_types_provided(Req, State) ->
 
 malformed_request(Req, State) ->
     % url?stop= is necessary
-    StopMap = catch cowboy_req:match_qs([stop], Req),
-    case StopMap of
+    case catch cowboy_req:match_qs([stop], Req) of
         {'EXIT', _} -> {true, Req, State};
         _ -> {false, Req, State}
     end.
