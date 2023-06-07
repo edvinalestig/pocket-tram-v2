@@ -6,6 +6,7 @@ DEPS = cowboy jiffy oauth2_client hackney jsx
 dep_cowboy_commit = 2.10.0
 dep_oauth2_client = git https://github.com/kivra/oauth2_client v1.4.2
 dep_hackney_commit = 1.18.0
+dep_jsx_commit = v2.11.0
 
 DEP_PLUGINS = cowboy
 
