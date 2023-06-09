@@ -1,23 +1,38 @@
 -module(util).
--export([get_gids/1, extract_info/1, combine_departures/1, sort/1]).
+-export([get_gid/1, 
+         extract_info/1, 
+         combine_departures/1, 
+         sort/1, 
+         stops/1]).
 
 
-get_gids(Stops) ->
+get_gid(Stop) ->
     Gids = #{
-        "kapellplatsen" => "9021014003760000",
-        "chalmers" => "9021014001960000",
-        "lindholmen" => "9021014004490000",
-        "brunnsparken" => "9021014001760000"
+        "kapellplatsen"  => "9021014003760000",
+        "chalmers"       => "9021014001960000",
+        "lindholmen"     => "9021014004490000",
+        "brunnsparken"   => "9021014001760000",
+        "lindholmspiren" => "9021014004493000",
+        nil              => nil
     },
-    [begin 
-        {ok, Gid} = maps:find(binary_to_list(Stop), Gids), 
-        Gid 
-    end || Stop <- Stops].
+    {ok, Gid} = maps:find(Stop, Gids), 
+    Gid.
 
-% stops(Stop) ->
-%     Stops = #{
-%         "kapellplatsen" => ["kapellplatsen"]
-%     }.
+stops(Stop) ->
+    Stops = #{
+        "kapellplatsen" => [{"Kapellplatsen", "kapellplatsen", nil},
+                            {"Chamlers", "chalmers", nil}],
+        "chalmers"      => [{"Chalmers", "chalmers", nil}],
+        "lindholmen"    => [{"Lindholmen", "lindholmen", nil},
+                            {"Lindholmspiren", "lindholmspiren", nil}],
+        "brunnsparken"  => [{"Brunnsparken", "brunnsparken", nil}]
+    },
+    case maps:find(binary_to_list(Stop), Stops) of
+        error ->
+            not_implemented;
+        {ok, Res} ->
+            [{Title, get_gid(S1), get_gid(S2)} || {Title, S1, S2} <- Res]
+    end.
 
 extract_info(Departures) ->
     extract_info(Departures, []).

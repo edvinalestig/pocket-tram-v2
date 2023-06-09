@@ -1,3 +1,35 @@
 body {
-    background-color: lightseagreen;
+    background-color: azure;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+h1 {
+    padding: 5px;
+    margin: 0px;
+    background-color: crimson;
+    color: aliceblue;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0px;
+}
+
+li {
+    padding: 4px;
+    display: flex;
+}
+
+li > a{
+    text-decoration: none;
+    color: rgb(8, 8, 75);
+    font-size: larger;
+    text-align: center;
+    flex: auto;
+    font-weight: bold;
 }

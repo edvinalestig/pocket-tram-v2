@@ -17,20 +17,29 @@ function getDepartures() {
     .catch(error => console.error(error));
 }
 
-function update(deps) {
-    departures = deps;
-    processDeps(departures);
+function update(departs) {
+    departures = departs;
+    for (let dep of departs) {
+        processDeps(dep.departures);
+    }
     killChildren(maindiv);
-
-    createBox("Titel", departures);
+    const span = document.createElement("p");
+    const now = new Date();
+    span.innerHTML = "Uppdaterad " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+    span.classList.add("updatetime");
+    maindiv.appendChild(span);
+    for (let dep of departs) {
+        createBox(dep.title, dep.departures);
+    }
 }
 
 function processDeps(deps) {
+    if (deps == "error") return;
     for (let dep of deps) {
         dep.time = dep.time.map(e => {
             if (e.cancelled) return "X";
             const time = new Date(e.time) - Date.now();
-            const countdown = Math.floor(time / 60000); // ms to min
+            const countdown = time >= 0 ? Math.floor(time / 60000) : Math.ceil(time / 60000); // ms to min
             if (e.realtime) return (countdown == 0) ? "Nu" : countdown;
             else return "Ca " + countdown;
         });
@@ -50,6 +59,13 @@ function createBox(title, contents) {
     h3.innerHTML = title;
     h3.classList.add("grouptitle");
     box.appendChild(h3);
+
+    if (contents == "error") {
+        let p = document.createElement("p");
+        p.innerHTML = "Det sket sig, ursäkta.";
+        box.appendChild(p);
+        return;
+    }
 
     for (let d of contents) {
         times = d.time;

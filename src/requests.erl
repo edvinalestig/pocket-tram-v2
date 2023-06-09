@@ -20,17 +20,11 @@ malformed_request(Req, State) ->
     end.
 
 to_json(Req, State) ->
-    % Gid = "9021014003760000",
     #{stop := Stop} = cowboy_req:match_qs([stop], Req),
-    Gid = util:get_gids([Stop]),
 
-    Result = vasttrafik:departures(Gid),
-    {<<"results">>, Results} = lists:keyfind(<<"results">>, 1, Result),
-    
-    Extracted = util:extract_info(Results),
-    Combined  = util:combine_departures(Extracted),
-    Sorted    = util:sort(Combined),
+    Stops = util:stops(Stop),
+    Deps = vasttrafik:get_departures(Stops),
 
-    Body = jsx:encode(Sorted),
+    Body = jsx:encode(Deps),
     {Body, Req, State}.
     
