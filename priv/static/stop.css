@@ -40,6 +40,11 @@ body {
     width: 90vw;
 }
 
+#updatetime {
+    font-size: small;
+    margin: 0px;
+}
+
 .direction, .time {
     padding-left: 3px;
 }
@@ -56,11 +61,6 @@ body {
 .line {
     text-align: center;
     overflow: hidden;
-}
-
-.updatetime {
-    font-size: small;
-    margin: 0px;
 }
 
 tr {

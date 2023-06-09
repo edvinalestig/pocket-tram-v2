@@ -1,11 +1,23 @@
 const place = decodeURI(document.location.pathname.split("/")[2]);
 const maindiv = document.getElementById("main");
 const titleHeader = document.getElementById("title");
+const timep = document.getElementById("updatetime");
 let departures;
+let updated;
 
 // On load, set title
 titleHeader.innerHTML = place.charAt(0).toUpperCase() + place.slice(1);
 getDepartures();
+getTime();
+
+function getTime() {
+    if (updated) {
+        timep.innerHTML = "Uppdaterad " + updated + " | " + (new Date()).toLocaleTimeString("sv-SE");
+    } else {
+        timep.innerHTML = (new Date()).toLocaleTimeString('sv-SE')
+    }
+    setTimeout(getTime, 250);
+}
 
 function getDepartures() {
     fetch("/request?stop=" + place)
@@ -23,14 +35,10 @@ function update(departs) {
         processDeps(dep.departures);
     }
     killChildren(maindiv);
-    const span = document.createElement("p");
-    const now = new Date();
-    span.innerHTML = "Uppdaterad " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-    span.classList.add("updatetime");
-    maindiv.appendChild(span);
     for (let dep of departs) {
         createBox(dep.title, dep.departures);
     }
+    updated = (new Date()).toLocaleTimeString('sv-SE');
 }
 
 function processDeps(deps) {
