@@ -11,6 +11,7 @@ getDepartures();
 getTime();
 
 function getTime() {
+    // Update the current time
     if (updated) {
         timep.innerHTML = "Uppdaterad " + updated + " | " + (new Date()).toLocaleTimeString("sv-SE");
     } else {
@@ -20,6 +21,7 @@ function getTime() {
 }
 
 function getDepartures() {
+    // Request departures from the server and show them.
     fetch("/request?stop=" + place)
     .then(response => {
         if (response.ok) return response.json();
@@ -30,6 +32,7 @@ function getDepartures() {
 }
 
 function update(departs) {
+    // Set global variable departures
     departures = departs;
     for (let dep of departs) {
         processDeps(dep.departures);
@@ -46,6 +49,7 @@ function processDeps(deps) {
     for (let dep of deps) {
         dep.time = dep.time.map(e => {
             if (e.cancelled) return "X";
+            // Convert departure time to countdown
             const time = new Date(e.time) - Date.now();
             const countdown = time >= 0 ? Math.floor(time / 60000) : Math.ceil(time / 60000); // ms to min
             if (e.realtime) return (countdown == 0) ? "Nu" : countdown;
@@ -55,6 +59,7 @@ function processDeps(deps) {
 }
 
 function killChildren(element) {
+    // Remove all child elements
     while (element.firstChild) {
         element.removeChild(element.firstChild);
     }
@@ -63,6 +68,7 @@ function killChildren(element) {
 function createBox(title, contents) {
     let box = document.createElement("div");
     maindiv.appendChild(box);
+    // Title header
     let h3 = document.createElement("h3");
     h3.innerHTML = title;
     h3.classList.add("grouptitle");
@@ -76,7 +82,7 @@ function createBox(title, contents) {
     }
 
     for (let d of contents) {
-        times = d.time;
+        let times = d.time;
         let row = createRow(
             d.name, d.direction, times[0], 
             (times.length > 1) ? times[1]:"", 

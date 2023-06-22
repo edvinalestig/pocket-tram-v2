@@ -22,7 +22,9 @@ malformed_request(Req, State) ->
 to_json(Req, State) ->
     #{stop := Stop} = cowboy_req:match_qs([stop], Req),
 
+    % Get the stops/directions for the requested area
     Stops = util:stops(Stop),
+    % Get the processed departures
     Deps = vasttrafik:get_departures(Stops),
 
     Body = jsx:encode(Deps),

@@ -7,6 +7,7 @@
 
 
 get_gid(Stop) ->
+    % Get the Västtrafik GID of a stop
     Gids = #{
         "kapellplatsen"  => "9021014003760000",
         "chalmers"       => "9021014001960000",
@@ -19,6 +20,8 @@ get_gid(Stop) ->
     Gid.
 
 stops(Stop) ->
+    % Get the stops/directions of an area
+    % {title, departure_stop, direction_stop}
     Stops = #{
         "kapellplatsen" => [{"Kapellplatsen", "kapellplatsen", nil},
                             {"Chamlers", "chalmers", nil}],
@@ -31,6 +34,7 @@ stops(Stop) ->
         error ->
             not_implemented;
         {ok, Res} ->
+            % Get the stops/directions and convert stops to GIDs
             [{Title, get_gid(S1), get_gid(S2)} || {Title, S1, S2} <- Res]
     end.
 
@@ -44,6 +48,7 @@ extract_info([Dep|Departures], Acc) ->
     {<<"isCancelled">>, Cancelled} = lists:keyfind(<<"isCancelled">>, 1, Dep),
     Time = case lists:keyfind(<<"estimatedTime">>, 1, Dep) of
         false ->
+            % No real time information available
             {<<"plannedTime">>, T} = lists:keyfind(<<"plannedTime">>, 1, Dep),
             #{
                 time => T,
@@ -51,6 +56,7 @@ extract_info([Dep|Departures], Acc) ->
                 cancelled => Cancelled
             };
         {<<"estimatedTime">>, T} -> 
+            % Use the real time
             #{
                 time => T,
                 realtime => true,
@@ -99,9 +105,11 @@ combine(Map, List) ->
     NewList = [begin
         case (maps:get(name,      Elem) == Name) and 
              (maps:get(direction, Elem) == Direction) of
+            % Check if line/departure is already in the map
             false ->
                 Elem;
             true ->
+                % The line/departure exists, append departure time
                 counters:add(Counter, 1, 1),
                 maps:merge_with(fun(Key, Val1, Val2) ->
                     case Key == time of
@@ -113,6 +121,7 @@ combine(Map, List) ->
                 end, Map, Elem)
         end
     end || Elem <- List],
+    % Add the line/departure if no previous existed
     case counters:get(Counter, 1) > 0 of
         true  -> NewList;
         false -> [Map|NewList]
@@ -120,16 +129,19 @@ combine(Map, List) ->
 
 
 sort(List) ->
+    % Sort by destination
     List2 = lists:sort(fun(E1,E2) ->
         #{direction := Dir1} = E1,
         #{direction := Dir2} = E2,
         Dir1 < Dir2
     end, List),
+    % Sort by line number/name
     lists:sort(fun(A,B) ->
         #{name := NameA} = A,
         #{name := NameB} = B,
         NameA1 = binary_to_list(NameA),
         NameB1 = binary_to_list(NameB),
+        % Prepend "0" to lines to get the same length
         N = max(length(NameA1), length(NameB1)),
         NameA2 = lists:concat(lists:duplicate(N-length(NameA1), "0")) ++ NameA1,
         NameB2 = lists:concat(lists:duplicate(N-length(NameB1), "0")) ++ NameB1,
