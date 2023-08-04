@@ -10,7 +10,10 @@ start(_Type, _Args) ->
             {"/", cowboy_static, {priv_file, pockettram2, "index.html"}},
             {"/stop/[...]", cowboy_static, {priv_file, pockettram2, "stop.html"}},
             {"/static/[...]", cowboy_static, {priv_dir, pockettram2, "static"}},
-            {"/request", requests, []} % REST
+            {"/util", cowboy_static, {priv_file, pockettram2, "util.html"}},
+            {"/findDepartures", departurepage, []},
+            {"/request", requests, []}, % REST
+            {"/searchstop", searchstop, []} % REST
         ]}
     ]),
     {ok, _} = cowboy:start_clear(my_http_listener,
