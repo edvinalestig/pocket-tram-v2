@@ -23,8 +23,8 @@ stops(Stop) ->
     % Get the stops/directions of an area
     % {title, departure_stop, direction_stop}
     Stops = #{
-        "kapellplatsen" => [{"Kapellplatsen", "kapellplatsen", nil},
-                            {"Chamlers", "chalmers", nil}],
+        "kapellplatsen" => [{"Kapellplatsen", "kapellplatsen", "brunnsparken"},
+                            {"Chamlers", "chalmers", "lindholmen"}],
         "chalmers"      => [{"Chalmers", "chalmers", nil}],
         "lindholmen"    => [{"Lindholmen", "lindholmen", nil},
                             {"Lindholmspiren", "lindholmspiren", nil}],

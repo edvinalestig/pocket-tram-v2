@@ -20,13 +20,14 @@ get_token() ->
     ),
     Client.
 
-departures(StopGid, _DirectionGid) ->
+departures(StopGid, DirectionGid) ->
     Client = get_token(),
     % Create the request URL and send to Västtrafik
     Url = restc:construct_url("https://ext-api.vasttrafik.se/pr/v4/", 
                               "stop-areas/" ++ StopGid ++ "/departures", [
                                 {<<"maxDeparturesPerLineAndDirection">>, <<"3">>},
-                                {<<"limit">>, <<"100">>}
+                                {<<"limit">>, <<"100">>},
+                                {<<"directionGid">>, DirectionGid} % Kräver just nu att den finns
                               ]),
     {{ok, _, _, Result}, _} = oauth2c:request(get, json, Url, [200], Client),
     Result.
